@@ -52,7 +52,6 @@ class FlappyGame(GameApp):
             self.dot.jump()
             self.dot.vy = self.dot.vu
 
-
 class PillarPair(Sprite):
     def update(self):
         self.x += PILLAR_SPEED
