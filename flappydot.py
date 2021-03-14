@@ -25,8 +25,12 @@ class Dot(Sprite):
         self.is_started = True
     
     def jump(self):
-        self.vu = JUMP_VELOCITY
-
+        self.vy = JUMP_VELOCITY
+    
+    def is_out_of_screen(self):
+        if self.y > CANVAS_HEIGHT or self.y < 0:
+            return True
+        return False
 class FlappyGame(GameApp):
     def create_sprites(self):
         self.dot = Dot(self, 'images/dot.png', CANVAS_WIDTH // 2, CANVAS_HEIGHT // 2)
@@ -43,14 +47,17 @@ class FlappyGame(GameApp):
         pass
 
     def post_update(self):
-        pass
+        if self.dot.is_out_of_screen() is True:
+           self.game_over()
 
     def on_key_pressed(self, event):
-        if self.dot.is_started is False:
-            self.dot.start()
-        else:
-            self.dot.jump()
-            self.dot.vy = self.dot.vu
+        self.dot.start()
+        self.dot.jump()
+
+
+    def game_over(self):
+        self.dot.is_started = False
+        self.dot.y = CANVAS_HEIGHT // 2
 
 class PillarPair(Sprite):
     def update(self):
