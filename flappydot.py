@@ -1,6 +1,7 @@
 import tkinter as tk
 
 from gamelib import Sprite, GameApp, Text
+import random
 
 CANVAS_WIDTH = 800
 CANVAS_HEIGHT = 500
@@ -8,7 +9,7 @@ CANVAS_HEIGHT = 500
 UPDATE_DELAY = 33
 GRAVITY = 2.5
 STARTING_VELOCITY = -30
-PILLAR_SPEED = -3
+PILLAR_SPEED = -10 #3
 JUMP_VELOCITY = -20
 
 class Dot(Sprite):
@@ -20,13 +21,13 @@ class Dot(Sprite):
         if self.is_started:
             self.y += self.vy
             self.vy += GRAVITY
-            
+
     def start(self):
         self.is_started = True
-    
+
     def jump(self):
         self.vy = JUMP_VELOCITY
-    
+
     def is_out_of_screen(self):
         if self.y > CANVAS_HEIGHT or self.y < 0:
             return True
@@ -45,11 +46,15 @@ class FlappyGame(GameApp):
         self.create_sprites()
 
     def pre_update(self):
-        pass
+        if self.pillar_pair.x >= 830:
+            self.pillar_pair.random_height()
 
     def post_update(self):
         if self.dot.is_out_of_screen() is True:
-           self.game_over()
+            self.game_over()
+
+        if self.pillar_pair.is_out_of_screen() is True:
+            self.pillar_pair.reset_position()
 
     def on_key_pressed(self, event):
         if self.dot.is_started == False:
@@ -63,6 +68,17 @@ class FlappyGame(GameApp):
 class PillarPair(Sprite):
     def update(self):
         self.x += PILLAR_SPEED
+
+    def is_out_of_screen(self):
+        if self.x <= -33:
+            return True
+        return False
+
+    def reset_position(self):
+        self.x = 833
+
+    def random_height(self):
+        self.y = random.randint(130,330)
 
 if __name__ == "__main__":
     root = tk.Tk()
