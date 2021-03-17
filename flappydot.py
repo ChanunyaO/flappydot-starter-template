@@ -49,7 +49,10 @@ class FlappyGame(GameApp):
 
     def post_update(self):
         if self.dot.is_out_of_screen() is True:
-           self.game_over()
+            self.game_over()
+
+        if self.pillar_pair.is_out_of_screen() is True:
+            self.pillar_pair.reset_position()
 
     def on_key_pressed(self, event):
         if self.dot.is_started == False:
@@ -63,6 +66,14 @@ class FlappyGame(GameApp):
 class PillarPair(Sprite):
     def update(self):
         self.x += PILLAR_SPEED
+
+    def is_out_of_screen(self):
+        if self.x < -33:
+            return True
+        return False
+
+    def reset_position(self):
+        self.x = 833
 
 if __name__ == "__main__":
     root = tk.Tk()
